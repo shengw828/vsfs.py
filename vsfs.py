@@ -7,7 +7,7 @@ DEBUG = False
 
 def dprint(str):
     if DEBUG:
-        print str
+        print (str)
 
 printOps      = True
 printState    = True
@@ -204,20 +204,20 @@ class fs:
         self.nameToInum = {'/':self.ROOT}
 
     def dump(self):
-        print 'inode bitmap ', self.ibitmap.dump()
-        print 'inodes       ',
+        print ('inode bitmap ', self.ibitmap.dump())
+        print ('inodes       ')
         for i in range(0,self.numInodes):
             ftype = self.inodes[i].getType()
             if ftype == 'free':
-                print '[]',
+                print ('[]')
             else:
-                print '[%s a:%s r:%d]' % (ftype, self.inodes[i].getAddr(), self.inodes[i].getRefCnt()),
-        print ''
-        print 'data bitmap  ', self.dbitmap.dump()
-        print 'data         ',
+                print ('[%s a:%s r:%d]' % (ftype, self.inodes[i].getAddr(), self.inodes[i].getRefCnt()))
+        print ('')
+        print ('data bitmap  ', self.dbitmap.dump())
+        print ('data         ')
         for i in range(self.numData):
-            print self.data[i].dump(),
-        print ''
+            print (self.data[i].dump())
+        print ('')
 
     def makeName(self):
         p = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -255,7 +255,7 @@ class fs:
 
     def deleteFile(self, tfile):
         if printOps:
-            print 'unlink("%s");' % tfile
+            print ('unlink("%s");' % tfile)
 
         inum = self.nameToInum[tfile]
         ftype = self.inodes[inum].getType()
@@ -380,7 +380,7 @@ class fs:
             self.data[fblock].addData(data)
         self.inodes[inum].setAddr(fblock)
         if printOps:
-            print 'fd=open("%s", O_WRONLY|O_APPEND); write(fd, buf, BLOCKSIZE); close(fd);' % tfile
+            print ('fd=open("%s", O_WRONLY|O_APPEND); write(fd, buf, BLOCKSIZE); close(fd);' % tfile)
         return 0
             
     def doDelete(self):
@@ -414,7 +414,7 @@ class fs:
             self.files.append(fullName)
             self.nameToInum[fullName] = inum
             if printOps:
-                print 'link("%s", "%s");' % (target, fullName)
+                print ('link("%s", "%s");' % (target, fullName))
             return 0
         return -1
     
@@ -441,10 +441,10 @@ class fs:
                 parent = ''
             if ftype == 'd':
                 if printOps:
-                    print 'mkdir("%s/%s");' % (parent, nfile)
+                    print ('mkdir("%s/%s");' % (parent, nfile))
             else:
                 if printOps:
-                    print 'creat("%s/%s");' % (parent, nfile)
+                    print ('creat("%s/%s");' % (parent, nfile))
             return 0
         return -1
 
@@ -464,14 +464,14 @@ class fs:
         self.percentDelete = 0.20
         self.numRequests   = 20
 
-        print 'Initial state'
-        print ''
+        print ('Initial state')
+        print ('')
         self.dump()
-        print ''
+        print ('')
         
         for i in range(numRequests):
             if printOps == False:
-                print 'Which operation took place?'
+                print ('Which operation took place?')
             rc = -1
             while rc == -1:
                 r = random.random()
@@ -492,27 +492,27 @@ class fs:
                         rc = self.doCreate('d')
                         dprint('doCreate(d) rc:%d' % rc)
                 if self.ibitmap.numFree() == 0:
-                    print 'File system out of inodes; rerun with more via command-line flag?'
+                    print ('File system out of inodes; rerun with more via command-line flag?')
                     exit(1)
                 if self.dbitmap.numFree() == 0:
-                    print 'File system out of data blocks; rerun with more via command-line flag?'
+                    print ('File system out of data blocks; rerun with more via command-line flag?')
                     exit(1)
             if printState == True:
-                print ''
+                print ('')
                 self.dump()
-                print ''
+                print ('')
             else:
-                print ''
-                print '  State of file system (inode bitmap, inodes, data bitmap, data)?'
-                print ''
+                print ('')
+                print ('  State of file system (inode bitmap, inodes, data bitmap, data)?')
+                print ('')
 
         if printFinal:
-            print ''
-            print 'Summary of files, directories::'
-            print ''
-            print '  Files:      ', self.files
-            print '  Directories:', self.dirs
-            print ''
+            print ('')
+            print ('Summary of files, directories::')
+            print ('')
+            print ('  Files:      ', self.files)
+            print ('  Directories:', self.dirs)
+            print ('')
 
 #
 # main program
@@ -529,13 +529,13 @@ parser.add_option('-c', '--compute',     default=False, help='compute answers fo
 
 (options, args) = parser.parse_args()
 
-print 'ARG seed',        options.seed
-print 'ARG numInodes',   options.numInodes
-print 'ARG numData',     options.numData
-print 'ARG numRequests', options.numRequests
-print 'ARG reverse',     options.reverse
-print 'ARG printFinal',  options.printFinal
-print ''
+print ('ARG seed',        options.seed)
+print ('ARG numInodes',   options.numInodes)
+print ('ARG numData',     options.numData)
+print ('ARG numRequests', options.numRequests)
+print ('ARG reverse',     options.reverse)
+print ('ARG printFinal',  options.printFinal)
+print ('')
 
 random.seed(options.seed)
 
